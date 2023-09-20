@@ -1,5 +1,5 @@
 [package]
-name = "MongoDb-rust-example"
+name = "mongo-rust-example"
 version = "0.1.0"
 edition = "2021"
 publish = false

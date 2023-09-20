@@ -1,4 +1,7 @@
 use serde::{Deserialize, Serialize};
+use warp::{http::StatusCode, reply::json};
+
+use crate::db::DB;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct TodoRequest {
@@ -6,35 +9,26 @@ pub struct TodoRequest {
     pub description: String,
 }
 
-pub mod request {
-    use crate::{request::TodoRequest, todo::Todo, DB};
-    use warp::{http::StatusCode, reject, reply::json, Reply};
+pub async fn fetch_items(db: DB) -> Result<impl warp::Reply, warp::Rejection> {
+    let items = db.fetch_items().await?;
 
-    pub async fn get_list(db: DB) -> Result<impl warp::Reply, warp::Rejection> {
-        let items = db.fetch_items().await.unwrap();
+    Ok(json(&items))
+}
 
-        Ok(json(&items))
-    }
+pub async fn add_item(item: TodoRequest, db: DB) -> Result<impl warp::Reply, warp::Rejection> {
+    db.add_item(&item).await?;
 
-    pub async fn add_item(item: TodoRequest, db: DB) -> Result<impl warp::Reply, warp::Rejection> {
-        db.add_item(&item).await.unwrap();
+    Ok(StatusCode::CREATED)
+}
 
-        Ok(StatusCode::CREATED)
-    }
+pub async fn update_item(item: TodoRequest, db: DB) -> Result<impl warp::Reply, warp::Rejection> {
+    db.update_item(&item).await?;
 
-    pub async fn update_item(
-        id: u32,
-        item: TodoRequest,
-        db: DB,
-    ) -> Result<impl warp::Reply, warp::Rejection> {
-        db.update_item(id, &item).await.unwrap();
+    Ok(StatusCode::OK)
+}
 
-        Ok(StatusCode::OK)
-    }
+pub async fn delete_item(title: String, db: DB) -> Result<impl warp::Reply, warp::Rejection> {
+    db.delete_item(&title).await?;
 
-    pub async fn delete_item(id: u32, db: DB) -> Result<impl warp::Reply, warp::Rejection> {
-        db.delete_item(id).await.unwrap();
-
-        Ok(StatusCode::OK)
-    }
+    Ok(StatusCode::OK)
 }

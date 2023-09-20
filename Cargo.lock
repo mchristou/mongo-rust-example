@@ -3,18 +3,6 @@
 version = 3
 
 [[package]]
-name = "MongoDb-rust-example"
-version = "0.1.0"
-dependencies = [
- "futures",
- "mongodb",
- "serde",
- "thiserror",
- "tokio",
- "warp",
-]
-
-[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -832,6 +820,18 @@ dependencies = [
  "libc",
  "wasi",
  "windows-sys",
+]
+
+[[package]]
+name = "mongo-rust-example"
+version = "0.1.0"
+dependencies = [
+ "futures",
+ "mongodb",
+ "serde",
+ "thiserror",
+ "tokio",
+ "warp",
 ]
 
 [[package]]
